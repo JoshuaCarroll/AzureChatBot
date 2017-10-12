@@ -31,7 +31,7 @@ public class RootDialog : IDialog<object>
 
   private async Task SendWelcomeMessageAsync(IDialogContext context)
   {
-    await context.PostAsync("Hi, I'm the Basic Multi Dialog bot. Let's get started.");
+    await context.PostAsync("How can I help?");
 
     context.Call(new NameDialog(), this.NameDialogResumeAfter);
   }

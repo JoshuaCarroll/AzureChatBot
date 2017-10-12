@@ -10,7 +10,7 @@
 
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("What is your name?");
+            await context.PostAsync("How can I help?");
 
             context.Wait(this.MessageReceivedAsync);
         }
@@ -19,8 +19,13 @@
         {
             var message = await result;
 
+            if ((message.Text.Contains("thanks")) || (message.Text.Contains("thank you")) && (message.Text.Contains("thx"))) {
+              await context.PostAsync("Anytime. I'm happy to help.");
+              context.Wait(this.MessageReceivedAsync);
+            }
+
             /* If the message returned is a valid name, return it to the calling dialog. */
-            if ((message.Text != null) && (message.Text.Trim().Length > 0))
+            else if ((message.Text != null) && (message.Text.Trim().Length > 0))
             {
                 /* Completes the dialog, removes it from the dialog stack, and returns the result to the parent/calling
                     dialog. */
