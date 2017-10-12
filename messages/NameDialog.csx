@@ -1,5 +1,3 @@
-namespace BasicMultiDialogBot.Dialogs
-{
     using Microsoft.Bot.Builder.Dialogs;
     using System;
     using System.Threading.Tasks;
@@ -47,4 +45,3 @@ namespace BasicMultiDialogBot.Dialogs
             }
         }
     }
-}
