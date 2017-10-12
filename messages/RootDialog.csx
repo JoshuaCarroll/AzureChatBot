@@ -17,7 +17,7 @@ public class RootDialog : IDialog<object>
   {
     /* Wait until the first message is received from the conversation and call MessageReceviedAsync
     *  to process that message. */
-    context.Wait(this.MessageReceivedAsync);
+    await context.Wait(this.MessageReceivedAsync);
   }
 
   private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
