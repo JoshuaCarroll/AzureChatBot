@@ -1,3 +1,6 @@
+#load "AgeDialog.csx"
+#load "NameDialog.csx"
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
@@ -50,7 +53,7 @@ public class RootDialog : IDialog<object>
       await this.SendWelcomeMessageAsync(context);
     }
   }
-  
+
   private async Task AgeDialogResumeAfter(IDialogContext context, IAwaitable<int> result)
   {
     try
