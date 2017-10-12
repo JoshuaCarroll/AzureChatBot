@@ -3,38 +3,70 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 
+#pragma warning disable 1998
+
 [Serializable]
 public class RootDialog : IDialog<object>
 {
-    public async Task StartAsync(IDialogContext context)
+
+  private string name;
+  private int age;
+
+  public async Task StartAsync(IDialogContext context)
+  {
+    /* Wait until the first message is received from the conversation and call MessageReceviedAsync
+    *  to process that message. */
+    context.Wait(this.MessageReceivedAsync);
+  }
+
+  private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+  {
+    /* When MessageReceivedAsync is called, it's passed an IAwaitable<IMessageActivity>. To get the message,
+    *  await the result. */
+    var message = await result;
+
+    await this.SendWelcomeMessageAsync(context);
+  }
+
+  private async Task SendWelcomeMessageAsync(IDialogContext context)
+  {
+    await context.PostAsync("Hi, I'm the Basic Multi Dialog bot. Let's get started.");
+
+    context.Call(new NameDialog(), this.NameDialogResumeAfter);
+  }
+
+  private async Task NameDialogResumeAfter(IDialogContext context, IAwaitable<string> result)
+  {
+    try
     {
-        // Root dialog initiates and waits for the next message from the user.
-        // When a message arrives, call MessageReceivedAsync.
-        context.Wait(this.MessageReceivedAsync);
-    }
+      this.name = await result;
 
-    public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+      context.Call(new AgeDialog(this.name), this.AgeDialogResumeAfter);
+    }
+    catch (TooManyAttemptsException)
     {
-        var message = await result; // We've got a message!
-        if (message.Text.ToLower().Contains("order"))
-        {
-            // User said 'order', so invoke the New Order Dialog and wait for it to finish.
-            // Then, call ResumeAfterNewOrderDialog.
-            await context.Forward(new NewOrderDialog(), this.ResumeAfterNewOrderDialog, message, CancellationToken.None);
-        }
-        // User typed something else; for simplicity, ignore this input and wait for the next message.
-        context.Wait(this.MessageReceivedAsync);
-    }
+      await context.PostAsync("I'm sorry, I'm having issues understanding you. Let's try again.");
 
-    private async Task ResumeAfterNewOrderDialog(IDialogContext context, IAwaitable<string> result)
+      await this.SendWelcomeMessageAsync(context);
+    }
+  }
+  
+  private async Task AgeDialogResumeAfter(IDialogContext context, IAwaitable<int> result)
+  {
+    try
     {
-        // Store the value that NewOrderDialog returned.
-        // (At this point, new order dialog has finished and returned some value to use within the root dialog.)
-        var resultFromNewOrder = await result;
+      this.age = await result;
 
-        await context.PostAsync($"New order dialog just told me this: {resultFromNewOrder}");
+      await context.PostAsync($"Your name is { name } and your age is { age }.");
 
-        // Again, wait for the next message from the user.
-        context.Wait(this.MessageReceivedAsync);
     }
+    catch (TooManyAttemptsException)
+    {
+      await context.PostAsync("I'm sorry, I'm having issues understanding you. Let's try again.");
+    }
+    finally
+    {
+      await this.SendWelcomeMessageAsync(context);
+    }
+  }
 }
