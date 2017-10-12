@@ -26,7 +26,7 @@ public class RootDialog : IDialog<object>
     *  await the result. */
     var message = await result;
 
-    await this.SendWelcomeMessageAsync(context);
+    this.SendWelcomeMessageAsync(context);
   }
 
   private async Task SendWelcomeMessageAsync(IDialogContext context)
