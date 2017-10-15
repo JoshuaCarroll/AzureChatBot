@@ -4,7 +4,7 @@
     using Microsoft.Bot.Connector;
 
     [Serializable]
-    public class NameDialog : IDialog<string>
+    public class SelectDialog : IDialog<string>
     {
         private int attempts = 3;
 
@@ -37,7 +37,7 @@
                 --attempts;
                 if (attempts > 0)
                 {
-                    await context.PostAsync("I'm sorry, I don't understand your reply. What is your name (e.g. 'Bill', 'Melinda')?");
+                    await context.PostAsync("I'm sorry, I don't understand your reply. Could you please try that again?");
 
                     context.Wait(this.MessageReceivedAsync);
                 }
