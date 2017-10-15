@@ -1,5 +1,5 @@
 #load "AgeDialog.csx"
-#load "NameDialog.csx"
+#load "SelectDialog.csx"
 
 using System;
 using System.Threading.Tasks;
@@ -31,18 +31,18 @@ public class RootDialog : IDialog<object>
 
   private async Task SendWelcomeMessageAsync(IDialogContext context)
   {
-    await context.PostAsync("How can I help?");
+    await context.PostAsync("Hello.");
 
-    context.Call(new NameDialog(), this.NameDialogResumeAfter);
+    context.Call(new SelectDialog(), this.SelectDialogResumeAfter);
   }
 
-  private async Task NameDialogResumeAfter(IDialogContext context, IAwaitable<string> result)
+  private async Task SelectDialogResumeAfter(IDialogContext context, IAwaitable<string> result)
   {
     try
     {
       this.name = await result;
 
-      context.Call(new AgeDialog(this.name), this.AgeDialogResumeAfter);
+      //context.Call(new AgeDialog(this.name), this.AgeDialogResumeAfter);
     }
     catch (TooManyAttemptsException)
     {
