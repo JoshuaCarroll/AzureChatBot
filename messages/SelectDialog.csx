@@ -12,16 +12,14 @@
         {
             await context.PostAsync("How can I help?");
 
-            //context.Wait(this.MessageReceivedAsync);
-            context.Wait(delegate (IDialogContext context, IAwaitable<IMessageActivity> result) {
-                var message = await result;
-                await context.PostAsync("You said: " + message.Text);
-            });
+            context.Wait(this.MessageReceivedAsync);
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             var message = await result;
+
+            await context.PostAsync("You said: " + message.Text);
 
             if ((message.Text.Contains("thanks")) || (message.Text.Contains("thank you")) && (message.Text.Contains("thx"))) {
               await context.PostAsync("Anytime. I'm happy to help.");
