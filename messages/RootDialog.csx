@@ -15,15 +15,12 @@ public class RootDialog : IDialog<object>
 
   public async Task StartAsync(IDialogContext context)
   {
-    /* Wait until the first message is received from the conversation and call MessageReceviedAsync
-    *  to process that message. */
+    await context.PostAsync("RootDialog - PostAsync");
     context.Wait(this.MessageReceivedAsync);
   }
 
   private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
   {
-    /* When MessageReceivedAsync is called, it's passed an IAwaitable<IMessageActivity>. To get the message,
-    *  await the result. */
     var message = await result;
 
     await this.SendWelcomeMessageAsync(context);
@@ -31,8 +28,6 @@ public class RootDialog : IDialog<object>
 
   private async Task SendWelcomeMessageAsync(IDialogContext context)
   {
-    await context.PostAsync("Hello.");
-
     context.Call(new SelectDialog(), this.SelectDialogResumeAfter);
   }
 
@@ -48,25 +43,6 @@ public class RootDialog : IDialog<object>
     {
       await context.PostAsync("I'm sorry, I'm having issues understanding you. Let's try again.");
 
-      await this.SendWelcomeMessageAsync(context);
-    }
-  }
-
-  private async Task AgeDialogResumeAfter(IDialogContext context, IAwaitable<int> result)
-  {
-    try
-    {
-      this.age = await result;
-
-      await context.PostAsync($"Your name is { name } and your age is { age }.");
-
-    }
-    catch (TooManyAttemptsException)
-    {
-      await context.PostAsync("I'm sorry, I'm having issues understanding you. Let's try again.");
-    }
-    finally
-    {
       await this.SendWelcomeMessageAsync(context);
     }
   }
