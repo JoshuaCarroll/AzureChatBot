@@ -11,8 +11,9 @@
 
         public async Task StartAsync(IDialogContext context)
         {
-            string[] arrWelcome = { "How can I help?", "What can I do for you?", "Fire away.", "So what can I do for you?" };
-            await context.PostAsync(arrWelcome[new Random().Next(0,arrWelcome.Length)]);
+            //string[] arrWelcome = { "How can I help?", "What can I do for you?", "Fire away.", "So what can I do for you?" };
+            //await context.PostAsync(arrWelcome[new Random().Next(0,arrWelcome.Length)]);
+            await context.PostAsync("How can I help?");
 
             context.Wait(this.MessageReceivedAsync);
         }
@@ -34,6 +35,9 @@
                             qID = "01";
                             await context.PostAsync("I can't list the servers yet. Will you be happy when I can?");
                         }
+                        else {
+                            await context.PostAsync(message.Name + " said, \"" + message.Text + "\"");
+                        }
                         break;
                     case "01":
                         if (message.Text.Contains("yes")) {
@@ -44,7 +48,7 @@
                         }
                         break;
                     case "999":
-                        qID="00";
+                        qID="0";
                         await context.PostAsync("So what else can I do for you today?");
                         break;
                     default:
