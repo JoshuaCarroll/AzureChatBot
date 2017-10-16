@@ -1,5 +1,5 @@
 #r "Newtonsoft.Json"
-#load "RootDialog.csx"
+#load "SelectDialog.csx"
 
 using System;
 using System.Net;
@@ -23,7 +23,7 @@ using Microsoft.Bot.Connector;
 
 public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
-    log.Info($"Webhook was triggered! (run.csx Run())");
+    log.Info($"Webhook was triggered");
 
     // Initialize the azure bot
     using (BotService.Initialize())
@@ -45,7 +45,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             switch (activity.GetActivityType())
             {
                 case ActivityTypes.Message:
-                    await Conversation.SendAsync(activity, () => new RootDialog());
+                    await Conversation.SendAsync(activity, () => new SelectDialog());
                     break;
                 case ActivityTypes.ConversationUpdate:
                     var client = new ConnectorClient(new Uri(activity.ServiceUrl));
