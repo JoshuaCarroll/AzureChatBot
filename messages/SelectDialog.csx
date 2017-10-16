@@ -2,7 +2,6 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector;
-    using Newtonsoft.Json;
 
     [Serializable]
     public class SelectDialog : IDialog<string>
