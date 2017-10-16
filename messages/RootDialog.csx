@@ -15,7 +15,6 @@ public class RootDialog : IDialog<object>
 
   public async Task StartAsync(IDialogContext context)
   {
-    await context.PostAsync("RootDialog - PostAsync");
     context.Wait(this.MessageReceivedAsync);
   }
 

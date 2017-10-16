@@ -10,7 +10,7 @@
 
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("How can I help?");
+            await context.PostAsync("How can I help you?");
 
             context.Wait(this.MessageReceivedAsync);
         }
@@ -19,14 +19,14 @@
         {
             var message = await result;
 
+            ToJson(context);
+
             await context.PostAsync("You said: " + message.Text);
 
             if ((message.Text.Contains("thanks")) || (message.Text.Contains("thank you")) && (message.Text.Contains("thx"))) {
               await context.PostAsync("Anytime. I'm happy to help.");
               context.Wait(this.MessageReceivedAsync);
             }
-
-            /* If the message returned is a valid name, return it to the calling dialog. */
             else if ((message.Text != null) && (message.Text.Trim().Length > 0))
             {
                 /* Completes the dialog, removes it from the dialog stack, and returns the result to the parent/calling
@@ -50,5 +50,16 @@
                     context.Fail(new TooManyAttemptsException("Message was not a string or was an empty string."));
                 }
             }
+        }
+
+        public static string ToJson(this object value)
+        {
+            var settings = new JsonSerializerSettings { 
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore 
+            };
+
+            string rtn = JsonConvert.SerializeObject(value, Formatting.Indented, settings);
+            log.Info(rtn);
+            return rtn;
         }
     }
