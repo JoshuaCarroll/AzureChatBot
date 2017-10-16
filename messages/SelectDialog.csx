@@ -19,11 +19,7 @@
         {
             var message = await result;
 
-            var settings = new JsonSerializerSettings { 
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore 
-            };
-            string rtn = JsonConvert.SerializeObject(value, Formatting.Indented, settings);
-            log.Info(rtn);
+            ToJson(context);
 
             await context.PostAsync("You said: " + message.Text);
 
@@ -54,5 +50,16 @@
                     context.Fail(new TooManyAttemptsException("Message was not a string or was an empty string."));
                 }
             }
+        }
+
+        public static string ToJson(this object value)
+        {
+            var settings = new JsonSerializerSettings { 
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore 
+            };
+
+            string rtn = JsonConvert.SerializeObject(value, Formatting.Indented, settings);
+            log.Info(rtn);
+            return rtn;
         }
     }
