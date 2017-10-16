@@ -7,10 +7,12 @@
     public class SelectDialog : IDialog<string>
     {
         private int attempts = 3;
+        private int[] arrConversation = new int[];
 
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("How can I help?");
+            string[] arrWelcome = { "How can I help?", "What can I do for you?", "Fire away.", "So what can I do for you?" };
+            await context.PostAsync(arrWelcome[new Random().Next(0,arrWelcome.Length)];);
 
             context.Wait(this.MessageReceivedAsync);
         }
@@ -27,10 +29,10 @@
             }
 
             /* If the message returned is a valid name, return it to the calling dialog. */
-            else if ((message.Text != null) && (message.Text.Trim().Length > 0))
+            else if ((message.Text.Contains("nothing")) || (message.Text.Contains("nevermind")) && (message.Text.Contains("never mind")))
             {
-                /* Completes the dialog, removes it from the dialog stack, and returns the result to the parent/calling
-                    dialog. */
+                /* Completes the dialog, removes it from the dialog stack, and returns the result to the parent/calling dialog. */
+                await context.PostAsync("Ok then. Talk to you later.");
                 context.Done(message.Text);
             }
             /* Else, try again by re-prompting the user. */
@@ -40,7 +42,6 @@
                 if (attempts > 0)
                 {
                     await context.PostAsync("I'm sorry, I don't understand your reply. Could you please try that again?");
-
                     context.Wait(this.MessageReceivedAsync);
                 }
                 else
